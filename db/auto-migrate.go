@@ -6,6 +6,6 @@ import (
 )
 
 func DBMigration(db *gorm.DB) error {
-	db.Migrator().DropTable(&models.Event{})
-	return db.AutoMigrate(&models.Event{})
+	db.Migrator().DropTable(&models.Event{}, &models.Ticket{})
+	return db.AutoMigrate(&models.Event{}, &models.Ticket{})
 }
