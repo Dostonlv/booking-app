@@ -2,16 +2,16 @@ package repositories
 
 import (
 	"context"
-	"time"
 
 	"github.com/Dostonlv/booking-app/models"
+	"gorm.io/gorm"
 )
 
 type eventRepository struct {
-	db any
+	db *gorm.DB
 }
 
-func NewEventRepository(db any) models.EventRepository {
+func NewEventRepository(db *gorm.DB) models.EventRepository {
 	return &eventRepository{
 		db: db,
 	}
@@ -19,15 +19,10 @@ func NewEventRepository(db any) models.EventRepository {
 
 func (r *eventRepository) GetMany(ctx context.Context) ([]*models.Event, error) {
 	events := []*models.Event{}
-
-	events = append(events, &models.Event{
-		ID:        "1",
-		Name:      "Event 1",
-		Location:  "Location 1",
-		Date:      time.Now(),
-		CreatedAt: time.Now(),
-		UpdatedAt: time.Now(),
-	})
+	res := r.db.Model(&models.Event{}).Find(&events)
+	if res.Error != nil {
+		return nil, res.Error
+	}
 
 	return events, nil
 }
